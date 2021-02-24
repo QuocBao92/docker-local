@@ -1,0 +1,9 @@
+[
+  {
+    "name": "nestjs-kafka",
+    "enableBuild": true,
+    "dirPath": "../nestjs-kafka",
+    "branch": "master",
+    "imageName": "nestjs-kafka"
+  }
+]

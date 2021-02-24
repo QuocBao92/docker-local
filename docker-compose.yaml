@@ -1,0 +1,52 @@
+version: "3"
+services:
+  # nestjs-kafka:
+  #   image: nestjs-kafka
+  #   # build: ../nestjs-kafka
+  #   container_name: nestjs-kafka
+  #   restart: always
+  #   ports:
+  #     - 4001:3000
+  #   volumes:
+  #     - ./config/bff-config.json:/app/dist/assets/conf/app-config.json
+  #   environment:
+  #     PRODUCTION: "true"
+  #     SERVER_PORT: 3000
+
+  #     KAFKA_CONFIG_PATH: /app/dist/assets/conf/app-config.json
+
+  # database
+  imo-database:
+    image: postgres:11
+    container_name: imo-database
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./setup-sql:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  # kafka
+  kafka:
+    image: wurstmeister/kafka:latest
+    container_name: kafka
+    restart: always
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: ${HOST_IP}
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_CREATE_TOPICS: "TEST-KAFKA:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    container_name: zookeeper
+    restart: always
+    ports:
+      - "2181:2181"
